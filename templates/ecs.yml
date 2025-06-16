@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: ECS Cluster with EC2 launch type
+
+Resources:
+  MyCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: devops-ecs-cluster
+
+Outputs:
+  ClusterName:
+    Value: !Ref MyCluster

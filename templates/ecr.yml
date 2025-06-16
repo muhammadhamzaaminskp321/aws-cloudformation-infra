@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: ECR Repository for Docker images
+
+Resources:
+  MyECRRepo:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: devops-sample-repo
+
+Outputs:
+  RepoUri:
+    Value: !GetAtt MyECRRepo.RepositoryUri

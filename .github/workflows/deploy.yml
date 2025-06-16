@@ -1,0 +1,66 @@
+name: Deploy AWS Infrastructure
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    name: Deploy CloudFormation Templates
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Deploy VPC Stack
+      run: |
+        aws cloudformation deploy \
+          --template-file templates/vpc.yml \
+          --stack-name dev-vpc-stack \
+          --capabilities CAPABILITY_NAMED_IAM
+
+    - name: Deploy S3 Stack
+      run: |
+        aws cloudformation deploy \
+          --template-file templates/s3.yml \
+          --stack-name dev-s3-stack \
+          --capabilities CAPABILITY_NAMED_IAM
+
+    - name: Deploy ECR Stack
+      run: |
+        aws cloudformation deploy \
+          --template-file templates/ecr.yml \
+          --stack-name dev-ecr-stack \
+          --capabilities CAPABILITY_NAMED_IAM
+
+    - name: Deploy ECS Stack
+      run: |
+        aws cloudformation deploy \
+          --template-file templates/ecs.yml \
+          --stack-name dev-ecs-stack \
+          --parameter-overrides file://parameters/dev-params.json \
+          --capabilities CAPABILITY_NAMED_IAM
+
+    - name: Deploy ALB Stack
+      run: |
+        aws cloudformation deploy \
+          --template-file templates/alb.yml \
+          --stack-name dev-alb-stack \
+          --parameter-overrides file://parameters/dev-params.json \
+          --capabilities CAPABILITY_NAMED_IAM
+
+    - name: Deploy RDS Stack
+      run: |
+        aws cloudformation deploy \
+          --template-file templates/rds.yml \
+          --stack-name dev-rds-stack \
+          --parameter-overrides file://parameters/dev-params.json \
+          --capabilities CAPABILITY_NAMED_IAM
