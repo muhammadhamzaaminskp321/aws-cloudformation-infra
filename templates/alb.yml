@@ -8,10 +8,10 @@ Resources:
       Name: devops-app-alb
       Scheme: internet-facing
       Subnets:
-        - subnet-12345678  # Replace
-        - subnet-87654321
+        - subnet-0a77027889b9e7edf  # us-east-1a (vpc-09c03efee4b2d68d2)
+        - subnet-0235af0256cd6dd60  # us-east-1b (vpc-09c03efee4b2d68d2)
       SecurityGroups:
-        - sg-12345678      # Replace
+        - sg-0b7acf827bde090a1    # Replace this with actual valid SG ID
       Type: application
 
   TargetGroup:
@@ -19,7 +19,7 @@ Resources:
     Properties:
       Port: 80
       Protocol: HTTP
-      VpcId: vpc-12345678  # Replace
+      VpcId: vpc-09c03efee4b2d68d2
       TargetType: ip
 
   Listener:
@@ -34,4 +34,5 @@ Resources:
 
 Outputs:
   ALBName:
-    Value: !Ref ALB
+    Description: Name of the created ALB
+    Value: !GetAtt ALB.LoadBalancerName
